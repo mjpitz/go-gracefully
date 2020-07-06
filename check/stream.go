@@ -2,6 +2,7 @@ package check
 
 import (
 	"context"
+
 	"github.com/jonboulle/clockwork"
 )
 
@@ -11,8 +12,8 @@ type WatchFunc = func(ctx context.Context, channel chan *Result)
 // Stream is a Check implementation
 type Stream struct {
 	*Metadata
-	Clock    clockwork.Clock `json:"-"`
-	WatchFunc WatchFunc `json:"-"`
+	Clock     clockwork.Clock `json:"-"`
+	WatchFunc WatchFunc       `json:"-"`
 }
 
 // GetMetadata returns meta information about the check.
@@ -37,7 +38,7 @@ func (s *Stream) Watch(ctx context.Context, channel chan *Report) {
 			case result := <-results:
 				result.Timestamp = s.Clock.Now()
 				channel <- &Report{
-					Check: s,
+					Check:  s,
 					Result: result,
 				}
 			case <-stopCh:

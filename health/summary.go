@@ -22,7 +22,11 @@ func (s *summary) update(report *check.Report) {
 	defer s.mu.Unlock()
 
 	// TODO: update in memory state.
+
 	// TODO: only broadcast when state changes
+
+	// TODO: extra broadcast when a single report changes
+	//       the overall system health
 
 	s.broadcast(report)
 }

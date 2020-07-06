@@ -127,8 +127,13 @@ func main() {
     }
 
     for report := range reports {
-        _ = report.Check.GetMetadata() // metadata
-        _ = report.Result // check evaluation
+        // access check information if present
+        // - Check will not be present for changes in overall system health
+        _ = report.Check
+
+        // access check evaluation result data
+        // - Result will be present for all reports
+        _ = report.Result
     }
 }
 ```

@@ -19,7 +19,6 @@ func NewMonitor(checks ...check.Check) *Monitor {
 		mu:      &sync.Mutex{},
 		started: false,
 		checks:  checks,
-		reports: make(chan *check.Report, len(checks)),
 	}
 }
 
@@ -32,7 +31,6 @@ type Monitor struct {
 	mu          *sync.Mutex
 	started     bool
 	checks      []check.Check
-	reports     chan *check.Report
 	subscribers map[string]chan *check.Report
 }
 
@@ -48,14 +46,16 @@ func (m *Monitor) Start(ctx context.Context) error {
 	m.started = true
 
 	go func() {
+		reports := make(chan *check.Report, len(m.checks))
+
 		for _, registered := range m.checks {
-			registered.Watch(ctx, m.reports)
+			registered.Watch(ctx, reports)
 		}
 
 		stopCh := ctx.Done()
 		for {
 			select {
-			case report := <-m.reports:
+			case report := <-reports:
 				m.broadcast(report)
 			case <-stopCh:
 				return
@@ -89,6 +89,9 @@ func (m *Monitor) Subscribe() (chan *check.Report, UnsubFunc) {
 	m.subscribers[uid] = subscriber
 
 	return subscriber, func() {
+		m.mu.Lock()
+		defer m.mu.Unlock()
+
 		delete(m.subscribers, uid)
 		close(subscriber)
 	}

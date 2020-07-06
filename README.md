@@ -4,6 +4,15 @@
 Unlike many solutions out there, `go-gracefully` uses an asynchronous, stream based check scheme.
 This enables real-time checks as well as push based changes.
 
+**Status:** Work in Progress
+
+**Remaining:**
+
+- [ ] create a summary report of an applications health
+- [ ] examples
+  - [ ] gRPC
+  - [ ] REST
+
 ## How does it work?
 
 All checks in `go-gracefully` have a common block of metadata.
@@ -32,6 +41,7 @@ When check's evaluated, it can return one of four possible states.
 * `Major` - The check is failing and requires attention soon.
 * `Outage` - The check is failing and requires attention.
 
+On its own, `state` represents a fractional value of health (i.e. `[0-1]`).
 Together, the `state` and the `weight` are used to approximate an applications' health.  
 
 ## Inspirations

@@ -85,7 +85,7 @@ func main() {
             },
         },
         &check.Stream{
-        	Metadata: &check.Metadata{
+            Metadata: &check.Metadata{
                 Name: "stream-check",
                 Runbook: "http://path/to/runbook.md",
                 Weight: 10,

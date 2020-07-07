@@ -6,13 +6,6 @@ This enables real-time checks as well as push based changes.
 
 **Status:** Work in Progress
 
-**Remaining:**
-
-- [ ] create a summary report of an applications health
-- [ ] examples
-  - [ ] gRPC
-  - [ ] REST
-
 ## How does it work?
 
 All checks in `go-gracefully` have a common block of metadata.

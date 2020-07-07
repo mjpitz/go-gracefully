@@ -4,17 +4,34 @@
 Unlike many solutions out there, `go-gracefully` uses an asynchronous, stream based check scheme.
 This enables real-time checks as well as push based changes.
 
-**Status:** Work in Progress
+**Status:**
+
+This library is currently available as a _preview_.
+I started development to support my existing work on [deps.cloud](http://github.com/depscloud).
+
+Most health check libraries you find are pull.
+In this model, you define your check as a function that's called on some set interval.
+While this is a great start to a solution, more advance techniques need to be able to push.
+
+The flow of information in the system is as follows:
+
+[![](https://mermaid.ink/img/eyJjb2RlIjoiZ3JhcGggTFJcbiAgQVtQZXJpb2RpY0NoZWNrXSAtLT58UmVwb3J0fCBDaChDaGFubmVsKVxuICBCW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuICBDW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuXHRDaCAtLT4gTVtNb25pdG9yXVxuICBNIC0tPnxSZXBvcnR8IFNbU3Vic2NyaWJlcnNdXG4gIE0gLS0tIFN5c3RlbVJlcG9ydCIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In0sInVwZGF0ZUVkaXRvciI6ZmFsc2V9)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggTFJcbiAgQVtQZXJpb2RpY0NoZWNrXSAtLT58UmVwb3J0fCBDaChDaGFubmVsKVxuICBCW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuICBDW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuXHRDaCAtLT4gTVtNb25pdG9yXVxuICBNIC0tPnxSZXBvcnR8IFNbU3Vic2NyaWJlcnNdXG4gIE0gLS0tIFN5c3RlbVJlcG9ydCIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In0sInVwZGF0ZUVkaXRvciI6ZmFsc2V9)
+
+1. Each `Check` produces a report that is collected by the `Monitor` through a channel.
+2. The monitor maintains some internal state of the system (called a `summary`).
+3. When either a check, or the system state changes, a `Report` is published to subscribers.
+
+A snapshot of the full report can be obtained from the monitor.
 
 ## How does it work?
 
 All checks in `go-gracefully` have a common block of metadata.
 
 * `Name` is a required descriptor of the check.
-  * Avoid whitespace where possible.
+  * Avoid whitespace where possible. Preferred character set: `[a-zA-Z0-9-_.]`
 * An optional `Runbook` can be provided to aid in the resolution of issues.
   * When provided, this should be a valid URL.
-* Finally, a `Weight` is used to determine relative importance of check.
+* Finally, a `Weight` is used to determine relative importance of check to the overall system.
   * A check with `Weight: 100` has a greater impact on the system health than one with `Weight: 10`. 
 
 ```go

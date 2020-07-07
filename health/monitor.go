@@ -7,6 +7,7 @@ import (
 	"github.com/jonboulle/clockwork"
 
 	"github.com/mjpitz/go-gracefully/check"
+	"github.com/mjpitz/go-gracefully/state"
 )
 
 // NewMonitor constructs and returns a monitor capable of observing the
@@ -14,16 +15,30 @@ import (
 func NewMonitor(checks ...check.Check) *Monitor {
 	clock := clockwork.NewRealClock()
 
+	totalHP := float32(0)
+	checkIndex := make(map[string]check.Check)
+	for _, registered := range checks {
+		meta := registered.GetMetadata()
+		checkIndex[meta.Name] = registered
+		totalHP += float32(meta.Weight)
+	}
+
 	return &Monitor{
 		clock:   clock,
 		mu:      &sync.Mutex{},
 		started: false,
-		checks:  checks,
 		summary: &summary{
 			clock:       clock,
 			mu:          &sync.Mutex{},
-			checks:      nil,
-			subscribers: nil,
+			checks:      checkIndex,
+			subscribers: make(map[string]chan *check.Report),
+			totalHP:     totalHP,
+			hp:          0,
+			system: &check.Result{
+				State: state.Unknown,
+			},
+			lastResults:      make(map[string]*check.Result),
+			lastKnownResults: make(map[string]*check.Result),
 		},
 	}
 }
@@ -36,7 +51,6 @@ type Monitor struct {
 
 	mu      *sync.Mutex
 	started bool
-	checks  []check.Check
 	summary *summary
 }
 
@@ -68,9 +82,10 @@ func (m *Monitor) Start(ctx context.Context) error {
 	m.started = true
 
 	go func() {
-		reports := make(chan *check.Report, len(m.checks))
+		// +1 for the system
+		reports := make(chan *check.Report, len(m.summary.checks) + 1)
 
-		for _, registered := range m.checks {
+		for _, registered := range m.summary.checks {
 			registered.Watch(ctx, reports)
 		}
 

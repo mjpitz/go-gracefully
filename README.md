@@ -19,7 +19,7 @@ All checks in `go-gracefully` have a common block of metadata.
 
 ```go
     // ...
-    Metadata: &check.Metadata{
+    Metadata: check.Metadata{
         Name: "periodic-check",
         Runbook: "http://path/to/runbook.md",
         Weight: 10,
@@ -72,7 +72,7 @@ import (
 func main() {
     monitor := health.NewMonitor([]check.Check{
         &check.Periodic{
-            Metadata: &check.Metadata{
+            Metadata: check.Metadata{
                 Name: "periodic-check",
                 Runbook: "http://path/to/runbook.md",
                 Weight: 10,
@@ -85,12 +85,12 @@ func main() {
             },
         },
         &check.Stream{
-            Metadata: &check.Metadata{
+            Metadata: check.Metadata{
                 Name: "stream-check",
                 Runbook: "http://path/to/runbook.md",
                 Weight: 10,
             },
-            WatchFunc: func(ctx context.Context, channel chan *check.Result) {
+            WatchFunc: func(ctx context.Context, channel chan check.Result) {
                 stopCh := ctx.Done()
 
                 var upstreamCh chan interface{}
@@ -101,7 +101,7 @@ func main() {
                         case <-stopCh:
                             return
                         case _ = <-upstreamCh:
-                            channel <- &check.Result{
+                            channel <- check.Result{
                                 State: state.OK,
                                 Error: nil,
                             }
@@ -111,8 +111,8 @@ func main() {
         },
     }...)
 
-    reports, unsubcribe := monitor.Subscribe()
-    defer unsubcribe()
+    reports, unsubscribe := monitor.Subscribe()
+    defer unsubscribe()
 
     ctx := context.Background()
     if err := monitor.Start(ctx); err != nil {

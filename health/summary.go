@@ -1,9 +1,9 @@
 package health
 
 import (
-	"sync"
-
 	"github.com/google/uuid"
+	"github.com/mjpitz/go-gracefully/report"
+	"sync"
 
 	"github.com/jonboulle/clockwork"
 
@@ -95,5 +95,37 @@ func (s *summary) subscribe() (chan check.Report, UnsubFunc) {
 
 		delete(s.subscribers, uid)
 		close(subscriber)
+	}
+}
+
+func (s *summary) report() report.Report {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	results := make(map[string]report.CheckResult, len(s.checks))
+
+	for name, chk := range s.checks {
+		lastResult, ok := s.lastResults[name]
+		if !ok {
+			lastResult = &check.Result{
+				State:     state.Unknown,
+			}
+		}
+
+		lastKnownResult, ok := s.lastKnownResults[name]
+		if !ok {
+			lastKnownResult = lastResult
+		}
+
+		results[name] = report.CheckResult{
+			Metadata:       chk.GetMetadata(),
+			LastCheck:      *lastResult,
+			LastKnownCheck: *lastKnownResult,
+		}
+	}
+
+	return report.Report{
+		Result: *(s.system),
+		Results: results,
 	}
 }

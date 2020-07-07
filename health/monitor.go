@@ -2,6 +2,7 @@ package health
 
 import (
 	"context"
+	"github.com/mjpitz/go-gracefully/report"
 	"sync"
 
 	"github.com/jonboulle/clockwork"
@@ -107,4 +108,9 @@ func (m *Monitor) Start(ctx context.Context) error {
 // A report who has no check specified represents a change in overall system health.
 func (m *Monitor) Subscribe() (chan check.Report, UnsubFunc) {
 	return m.summary.subscribe()
+}
+
+// Report returns a summary of information regarding the current systems health.
+func (m *Monitor) Report() report.Report {
+	return m.summary.report()
 }

@@ -2,6 +2,8 @@ package health
 
 import (
 	"context"
+	"encoding/json"
+	"strings"
 	"sync"
 	"testing"
 	"time"
@@ -89,4 +91,33 @@ func TestSummary(t *testing.T) {
 			}
 		}
 	}
+
+	report := s.report()
+	data, err := json.MarshalIndent(report, "", "  ")
+	require.Nil(t, err)
+	require.Equal(t, reportJSON, string(data))
 }
+
+var reportJSON = strings.TrimSpace(`
+{
+  "state": "ok",
+  "error": null,
+  "timestamp": "1984-04-04T00:00:00Z",
+  "results": {
+    "static": {
+      "name": "static",
+      "weight": 100,
+      "last_check": {
+        "state": "ok",
+        "error": null,
+        "timestamp": "0001-01-01T00:00:00Z"
+      },
+      "last_known_check": {
+        "state": "ok",
+        "error": null,
+        "timestamp": "0001-01-01T00:00:00Z"
+      }
+    }
+  }
+}
+`)

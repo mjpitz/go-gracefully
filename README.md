@@ -15,13 +15,14 @@ While this is a great start to a solution, more advance techniques need to be ab
 
 The flow of information in the system is as follows:
 
-[![](https://mermaid.ink/img/eyJjb2RlIjoiZ3JhcGggTFJcbiAgQVtQZXJpb2RpY0NoZWNrXSAtLT58UmVwb3J0fCBDaChDaGFubmVsKVxuICBCW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuICBDW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuXHRDaCAtLT4gTVtNb25pdG9yXVxuICBNIC0tPnxSZXBvcnR8IFNbU3Vic2NyaWJlcnNdXG4gIE0gLS0tIFN5c3RlbVJlcG9ydCIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In0sInVwZGF0ZUVkaXRvciI6ZmFsc2V9)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggTFJcbiAgQVtQZXJpb2RpY0NoZWNrXSAtLT58UmVwb3J0fCBDaChDaGFubmVsKVxuICBCW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuICBDW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuXHRDaCAtLT4gTVtNb25pdG9yXVxuICBNIC0tPnxSZXBvcnR8IFNbU3Vic2NyaWJlcnNdXG4gIE0gLS0tIFN5c3RlbVJlcG9ydCIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In0sInVwZGF0ZUVkaXRvciI6ZmFsc2V9)
+[![](https://mermaid.ink/img/eyJjb2RlIjoiZ3JhcGggTFJcbiAgQVtQZXJpb2RpY0NoZWNrXSAtLT58UmVwb3J0fCBDaChDaGFubmVsKVxuICBCW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuICBDW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuXHRDaCAtLT4gTVtNb25pdG9yXVxuICBNIC0tPnxSZXBvcnR8IFNbU3Vic2NyaWJlcnNdXG4gIE0gLS0tfG1haW50YWluc3wgc3VtbWFyeSIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In0sInVwZGF0ZUVkaXRvciI6ZmFsc2V9)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZ3JhcGggTFJcbiAgQVtQZXJpb2RpY0NoZWNrXSAtLT58UmVwb3J0fCBDaChDaGFubmVsKVxuICBCW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuICBDW1N0cmVhbUNoZWNrXSAtLT58UmVwb3J0fCBDaFxuXHRDaCAtLT4gTVtNb25pdG9yXVxuICBNIC0tPnxSZXBvcnR8IFNbU3Vic2NyaWJlcnNdXG4gIE0gLS0tfG1haW50YWluc3wgc3VtbWFyeSIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In0sInVwZGF0ZUVkaXRvciI6ZmFsc2V9)
 
-1. Each `Check` produces a report that is collected by the `Monitor` through a channel.
-2. The monitor maintains some internal state of the system (called a `summary`).
-3. When either a check, or the system state changes, a `Report` is published to subscribers.
+1. Each `Check` produces a `Report`
+2. `Reports` are collected through the use of a channel by the `Monitor`.
+3. The monitor updates its `summary` of the system.
+4. When either a check, or the system state changes, a `Report` is published to subscribers.
 
-A snapshot of the full report can be obtained from the monitor.
+A snapshot of the full report can be obtained from the `Monitor`.
 
 ## How does it work?
 

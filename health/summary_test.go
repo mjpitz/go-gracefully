@@ -17,14 +17,14 @@ import (
 type staticCheck struct {
 }
 
-func (t *staticCheck) GetMetadata() *check.Metadata {
-	return &check.Metadata{
+func (t *staticCheck) GetMetadata() check.Metadata {
+	return check.Metadata{
 		Name:   "static",
 		Weight: 100,
 	}
 }
 
-func (t *staticCheck) Watch(ctx context.Context, channel chan *check.Report) {}
+func (t *staticCheck) Watch(ctx context.Context, channel chan check.Report) {}
 
 var _ check.Check = &staticCheck{}
 
@@ -64,16 +64,16 @@ func TestSummary(t *testing.T) {
 		},
 		lastResults:      make(map[string]*check.Result),
 		lastKnownResults: make(map[string]*check.Result),
-		subscribers:      make(map[string]chan *check.Report),
+		subscribers:      make(map[string]chan check.Report),
 	}
 
 	reports, unsub := s.subscribe()
 	defer unsub()
 
 	for _, test := range tests {
-		s.update(&check.Report{
+		s.update(check.Report{
 			Check: chk,
-			Result: &check.Result{
+			Result: check.Result{
 				State: test.in,
 			},
 		})

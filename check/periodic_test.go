@@ -84,7 +84,7 @@ func TestPeriodic_Watch(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.TODO())
 	defer cancel()
 
-	reportChan := make(chan *check.Report, 1)
+	reportChan := make(chan check.Report, 1)
 
 	periodic.Watch(ctx, reportChan)
 
@@ -117,6 +117,4 @@ func TestPeriodic_Watch(t *testing.T) {
 		require.Equal(t, state.OK, report.Result.State)
 		require.Nil(t, report.Result.Error)
 	}
-
-	clock.Advance(time.Second)
 }

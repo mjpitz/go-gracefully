@@ -15,7 +15,7 @@ type RunFunc = func(ctx context.Context) (state.State, error)
 // Periodic is a Check implementation that runs a provided function on a set
 // interval and configured timeout. This is a common type of Check.
 type Periodic struct {
-	*Metadata
+	Metadata
 	Interval time.Duration   `json:"interval,string"`
 	Timeout  time.Duration   `json:"timeout,string"`
 	Clock    clockwork.Clock `json:"-"`
@@ -23,22 +23,22 @@ type Periodic struct {
 }
 
 // GetMetadata returns meta information about the check.
-func (p *Periodic) GetMetadata() *Metadata {
+func (p *Periodic) GetMetadata() Metadata {
 	return p.Metadata
 }
 
 // Once performs a one time evaluation of the check.
-func (p *Periodic) Once(parent context.Context) *Result {
+func (p *Periodic) Once(parent context.Context) Result {
 	p.init()
 
 	ctx, cancel := context.WithTimeout(parent, p.Timeout)
 	defer cancel()
 
-	result := make(chan *Result, 1)
+	result := make(chan Result, 1)
 
 	go func() {
 		computedState, err := p.RunFunc(ctx)
-		result <- &Result{
+		result <- Result{
 			State:     computedState,
 			Error:     err,
 			Timestamp: p.Clock.Now(),
@@ -49,7 +49,7 @@ func (p *Periodic) Once(parent context.Context) *Result {
 	case r := <-result:
 		return r
 	case <-p.Clock.After(p.Timeout):
-		return &Result{
+		return Result{
 			State:     state.Unknown,
 			Error:     ErrTimeout,
 			Timestamp: p.Clock.Now(),
@@ -58,7 +58,7 @@ func (p *Periodic) Once(parent context.Context) *Result {
 }
 
 // Watch sets up a go routine to run the check on the configured interval.
-func (p *Periodic) Watch(ctx context.Context, channel chan *Report) {
+func (p *Periodic) Watch(ctx context.Context, channel chan Report) {
 	p.init()
 
 	stopCh := ctx.Done()
@@ -66,7 +66,7 @@ func (p *Periodic) Watch(ctx context.Context, channel chan *Report) {
 	go func() {
 		for {
 			result := p.Once(ctx)
-			channel <- &Report{
+			channel <- Report{
 				Check:  p,
 				Result: result,
 			}

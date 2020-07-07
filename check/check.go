@@ -10,8 +10,8 @@ import (
 // Check is the smallest unit of health in gracefully. Checks should be JSON
 // serializable.
 type Check interface {
-	GetMetadata() *Metadata
-	Watch(ctx context.Context, channel chan *Report)
+	GetMetadata() Metadata
+	Watch(ctx context.Context, channel chan Report)
 }
 
 // Metadata contains information common to every check.

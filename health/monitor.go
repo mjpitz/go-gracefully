@@ -31,7 +31,7 @@ func NewMonitor(checks ...check.Check) *Monitor {
 			clock:       clock,
 			mu:          &sync.Mutex{},
 			checks:      checkIndex,
-			subscribers: make(map[string]chan *check.Report),
+			subscribers: make(map[string]chan check.Report),
 			totalHP:     totalHP,
 			hp:          0,
 			system: &check.Result{
@@ -83,7 +83,7 @@ func (m *Monitor) Start(ctx context.Context) error {
 
 	go func() {
 		// +1 for the system
-		reports := make(chan *check.Report, len(m.summary.checks) + 1)
+		reports := make(chan check.Report, len(m.summary.checks) + 1)
 
 		for _, registered := range m.summary.checks {
 			registered.Watch(ctx, reports)
@@ -105,6 +105,6 @@ func (m *Monitor) Start(ctx context.Context) error {
 
 // Subscribe returns a channel that buffers reports for subscribers to respond to.
 // A report who has no check specified represents a change in overall system health.
-func (m *Monitor) Subscribe() (chan *check.Report, UnsubFunc) {
+func (m *Monitor) Subscribe() (chan check.Report, UnsubFunc) {
 	return m.summary.subscribe()
 }

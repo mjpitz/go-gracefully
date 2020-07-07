@@ -24,10 +24,10 @@ type summary struct {
 	checks           map[string]check.Check
 	lastResults      map[string]*check.Result
 	lastKnownResults map[string]*check.Result
-	subscribers      map[string]chan *check.Report
+	subscribers      map[string]chan check.Report
 }
 
-func (s *summary) update(report *check.Report) {
+func (s *summary) update(report check.Report) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -48,7 +48,7 @@ func (s *summary) update(report *check.Report) {
 	newResult := report.Result
 	newScore := state.Score(newResult.State)
 	s.hp += newScore * float32(meta.Weight)
-	s.lastResults[meta.Name] = newResult
+	s.lastResults[meta.Name] = &newResult
 
 	// broadcast the report if the state for the dependency changed
 
@@ -63,8 +63,8 @@ func (s *summary) update(report *check.Report) {
 		s.system.State = newState
 		s.system.Timestamp = s.clock.Now()
 
-		s.broadcast(&check.Report{
-			Result: &check.Result{
+		s.broadcast(check.Report{
+			Result: check.Result{
 				State:     s.system.State,
 				Timestamp: s.system.Timestamp,
 			},
@@ -72,20 +72,20 @@ func (s *summary) update(report *check.Report) {
 	}
 }
 
-func (s *summary) broadcast(report *check.Report) {
+func (s *summary) broadcast(report check.Report) {
 	for _, subscriber := range s.subscribers {
 		subscriber <- report
 	}
 }
 
-func (s *summary) subscribe() (chan *check.Report, UnsubFunc) {
+func (s *summary) subscribe() (chan check.Report, UnsubFunc) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	uid := uuid.New().String()
 
 	// +1 for the system
-	subscriber := make(chan *check.Report, len(s.checks) + 1)
+	subscriber := make(chan check.Report, len(s.checks) + 1)
 
 	s.subscribers[uid] = subscriber
 

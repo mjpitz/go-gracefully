@@ -1,5 +1,5 @@
 # go-gracefully
-![Google Analytics](https://www.google-analytics.com/collect?v=1&tid=UA-172921913-1&cid=555&t=event&ec=repo&ea=open&dp=mjpitz%2Fgo-gracefully&dt=mjpitz%2Fgo-gracefully)
+![Google Analytics](https://www.google-analytics.com/collect?v=1&tid=UA-172921913-1&cid=555&t=event&ec=repo&ea=open&dp=go-gracefully&dt=go-gracefully)
 
 `go-gracefully` is a library for monitoring and reporting on an applications' health.
 Unlike many solutions out there, `go-gracefully` uses an asynchronous, stream based check scheme.

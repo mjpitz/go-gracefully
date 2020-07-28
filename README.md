@@ -1,5 +1,5 @@
-![GitHub](https://img.shields.io/github/license/depscloud/gateway.svg)
-![branch](https://github.com/depscloud/gateway/workflows/branch/badge.svg?branch=main)
+![GitHub](https://img.shields.io/github/license/mjpitz/go-gracefully.svg)
+![branch](https://github.com/mjpitz/go-gracefully/workflows/branch/badge.svg?branch=main)
 ![Google Analytics](https://www.google-analytics.com/collect?v=1&tid=UA-172921913-1&cid=555&t=event&ec=repo&ea=open&dp=go-gracefully&dt=go-gracefully)
 
 # go-gracefully

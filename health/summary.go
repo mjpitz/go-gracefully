@@ -99,9 +99,6 @@ func (s *summary) subscribe() (chan check.Report, UnsubFunc) {
 }
 
 func (s *summary) report() report.Report {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
 	results := make(map[string]report.CheckResult, len(s.checks))
 
 	for name, chk := range s.checks {

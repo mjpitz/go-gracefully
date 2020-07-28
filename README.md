@@ -13,7 +13,7 @@ This enables real-time checks as well as push based changes.
 This library is currently available as a _preview_.
 I started development to support my existing work on [deps.cloud](http://github.com/depscloud).
 
-Most health check libraries you find are pull.
+Most health check libraries you find are pull based.
 In this model, you define your check as a function that's called on some set interval.
 While this is a great start to a solution, more advance techniques need to be able to push.
 

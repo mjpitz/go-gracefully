@@ -101,7 +101,6 @@ func TestSummary(t *testing.T) {
 var reportJSON = strings.TrimSpace(`
 {
   "state": "ok",
-  "error": null,
   "timestamp": "1984-04-04T00:00:00Z",
   "results": {
     "static": {
@@ -109,12 +108,10 @@ var reportJSON = strings.TrimSpace(`
       "weight": 100,
       "last_check": {
         "state": "ok",
-        "error": null,
         "timestamp": "0001-01-01T00:00:00Z"
       },
       "last_known_check": {
         "state": "ok",
-        "error": null,
         "timestamp": "0001-01-01T00:00:00Z"
       }
     }

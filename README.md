@@ -1,6 +1,6 @@
 ![GitHub](https://img.shields.io/github/license/mjpitz/go-gracefully.svg)
 ![branch](https://github.com/mjpitz/go-gracefully/workflows/branch/badge.svg?branch=main)
-![Google Analytics](https://www.google-analytics.com/collect?v=1&tid=UA-172921913-1&cid=555&t=event&ec=repo&ea=open&dp=go-gracefully&dt=go-gracefully)
+![Google Analytics](https://www.google-analytics.com/collect?v=1&tid=UA-172921913-1&cid=555&t=pageview&ec=repo&ea=open&dp=go-gracefully&dt=go-gracefully)
 
 # go-gracefully
 

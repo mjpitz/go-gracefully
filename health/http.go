@@ -1,13 +1,14 @@
-package report
+package health
 
 import (
 	"encoding/json"
-	"github.com/mjpitz/go-gracefully/health"
-	"github.com/mjpitz/go-gracefully/state"
 	"net/http"
+
+	"github.com/mjpitz/go-gracefully/state"
 )
 
-func HandlerFunc(monitor *health.Monitor) http.HandlerFunc {
+// HandlerFunc returns an http.HandlerFunc for users to register with their system.
+func HandlerFunc(monitor *Monitor) http.HandlerFunc {
 	return func(writer http.ResponseWriter, request *http.Request) {
 		report := monitor.Report()
 		body, err := json.Marshal(report)

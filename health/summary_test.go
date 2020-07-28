@@ -39,14 +39,14 @@ func TestSummary(t *testing.T) {
 	tests := []stateTest{
 		// each state change should receive two events: one for the check, one for the system
 		// re-emissions of the same state should not propagate
-		{ in: state.Outage, out: []state.State{ state.Outage, state.Outage } },
-		{ in: state.Outage, out: []state.State{  } },
-		{ in: state.Major, out: []state.State{ state.Major, state.Major } },
-		{ in: state.Major, out: []state.State{  } },
-		{ in: state.Minor, out: []state.State{ state.Minor, state.Minor } },
-		{ in: state.Minor, out: []state.State{  } },
-		{ in: state.OK, out: []state.State{ state.OK, state.OK } },
-		{ in: state.OK, out: []state.State{  } },
+		{in: state.Outage, out: []state.State{state.Outage, state.Outage}},
+		{in: state.Outage, out: []state.State{}},
+		{in: state.Major, out: []state.State{state.Major, state.Major}},
+		{in: state.Major, out: []state.State{}},
+		{in: state.Minor, out: []state.State{state.Minor, state.Minor}},
+		{in: state.Minor, out: []state.State{}},
+		{in: state.OK, out: []state.State{state.OK, state.OK}},
+		{in: state.OK, out: []state.State{}},
 	}
 
 	clock := clockwork.NewFakeClock()

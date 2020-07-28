@@ -2,12 +2,12 @@ package health
 
 import (
 	"context"
-	"github.com/mjpitz/go-gracefully/report"
 	"sync"
 
 	"github.com/jonboulle/clockwork"
 
 	"github.com/mjpitz/go-gracefully/check"
+	"github.com/mjpitz/go-gracefully/report"
 	"github.com/mjpitz/go-gracefully/state"
 )
 
@@ -84,7 +84,7 @@ func (m *Monitor) Start(ctx context.Context) error {
 
 	go func() {
 		// +1 for the system
-		reports := make(chan check.Report, len(m.summary.checks) + 1)
+		reports := make(chan check.Report, len(m.summary.checks)+1)
 
 		for _, registered := range m.summary.checks {
 			registered.Watch(ctx, reports)

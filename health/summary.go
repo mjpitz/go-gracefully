@@ -1,13 +1,14 @@
 package health
 
 import (
-	"github.com/google/uuid"
-	"github.com/mjpitz/go-gracefully/report"
 	"sync"
+
+	"github.com/google/uuid"
 
 	"github.com/jonboulle/clockwork"
 
 	"github.com/mjpitz/go-gracefully/check"
+	"github.com/mjpitz/go-gracefully/report"
 	"github.com/mjpitz/go-gracefully/state"
 )
 
@@ -85,7 +86,7 @@ func (s *summary) subscribe() (chan check.Report, UnsubFunc) {
 	uid := uuid.New().String()
 
 	// +1 for the system
-	subscriber := make(chan check.Report, len(s.checks) + 1)
+	subscriber := make(chan check.Report, len(s.checks)+1)
 
 	s.subscribers[uid] = subscriber
 
@@ -105,7 +106,7 @@ func (s *summary) report() report.Report {
 		lastResult, ok := s.lastResults[name]
 		if !ok {
 			lastResult = &check.Result{
-				State:     state.Unknown,
+				State: state.Unknown,
 			}
 		}
 
@@ -122,7 +123,7 @@ func (s *summary) report() report.Report {
 	}
 
 	return report.Report{
-		Result: *(s.system),
+		Result:  *(s.system),
 		Results: results,
 	}
 }

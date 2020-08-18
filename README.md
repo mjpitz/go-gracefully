@@ -83,6 +83,7 @@ package main
 
 import (
     "context"
+    "http"
     "log"
     "time"
 
@@ -141,6 +142,7 @@ func main() {
         log.Fatal(err.Error())
     }
 
+    // subscribe to changes in health
     for report := range reports {
         // access check information if present
         // - Check will not be present for changes in overall system health
@@ -150,5 +152,8 @@ func main() {
         // - Result will be present for all reports
         _ = report.Result
     }
+    
+    // or add an HTTP endpoint to view the results of it
+    http.HandleFunc("/healthz", health.HandlerFunc(monitor))
 }
 ```

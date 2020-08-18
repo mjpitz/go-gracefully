@@ -21,10 +21,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
-        run: make build-deps deps test fmt
+        run: make build-deps deps test
 
-      - name: Check for clean working tree
+      - name: Check for proper formatting
         run: |
+          make fmt
           if [[ $(git diff --stat) != '' ]]; then
             echo 'run make fmt and commit changes'
             exit 1

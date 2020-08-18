@@ -15,7 +15,7 @@ jobs:
       image: golang:1.14-alpine3.11
     steps:
       - name: Prepare
-        run: apk -U upgrade && apk add build-base git ca-certificates
+        run: apk -U upgrade && apk add build-base git ca-certificates bash
 
       - name: Checkout
         uses: actions/checkout@v2

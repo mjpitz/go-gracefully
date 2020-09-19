@@ -25,7 +25,7 @@ type Metadata struct {
 // to help diagnose issues in the system.
 type Result struct {
 	State     state.State `json:"state"`
-	CurrentHP   float32 `json:"currentHP,omitempty"`
+	CurrentHP float32     `json:"currentHP,omitempty"`
 	Error     error       `json:"error,omitempty"`
 	Timestamp time.Time   `json:"timestamp"`
 }

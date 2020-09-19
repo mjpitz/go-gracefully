@@ -64,6 +64,7 @@ func (s *summary) update(report check.Report) {
 		s.system.State = newState
 		s.system.Timestamp = s.clock.Now()
 		s.system.CurrentHP = s.hp / s.totalHP
+		
 		s.broadcast(check.Report{
 			Result: check.Result{
 				State:     s.system.State,

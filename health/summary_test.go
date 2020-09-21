@@ -101,6 +101,7 @@ func TestSummary(t *testing.T) {
 var reportJSON = strings.TrimSpace(`
 {
   "state": "ok",
+  "currentHP": 1,
   "timestamp": "1984-04-04T00:00:00Z",
   "results": {
     "static": {

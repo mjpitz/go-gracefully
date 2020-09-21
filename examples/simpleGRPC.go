@@ -2,24 +2,24 @@ package main
 
 import (
     "context"
-    //"http"
-    "net/http"
     "log"
+    "net/http"
     "time"
-    "google.golang.org/grpc"
-    pb "github.com/alonsopf/sil"
-    
-    
+
     "github.com/mjpitz/go-gracefully/check"
     "github.com/mjpitz/go-gracefully/health"
     "github.com/mjpitz/go-gracefully/state"
+
+    "google.golang.org/grpc"
+    pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
 const (
-    address     = "localhost:50051"
-    defaultName = "world"
+    address = "localhost:50051"
 )
+
 var c pb.GreeterClient
+
 func main() {
     var err error
     var conn *grpc.ClientConn
@@ -30,7 +30,7 @@ func main() {
     defer conn.Close()
     //don't forget to run the server first
     c = pb.NewGreeterClient(conn)
-    
+
     monitor := health.NewMonitor([]check.Check{
         &check.Periodic{
             Metadata: check.Metadata{
@@ -39,31 +39,9 @@ func main() {
                 Weight: 10,
             },
             Interval: time.Second * 5,
-            Timeout: time.Second,
+            Timeout:  time.Second,
             RunFunc: func(ctx context.Context) (state.State, error) {
-                // make GRPC call, check system health
-                ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-                defer cancel()
                 _, err := c.SayHello(ctx, &pb.HelloRequest{Name: "hello grpc"})
-                if err != nil {
-                    return state.Unknown, err
-                }
-                return state.OK, nil
-            },
-        },
-        &check.Periodic{
-            Metadata: check.Metadata{
-                Name: "check-if-grpc-is-up",
-                //Runbook: "https://example.com/Runbook.md",
-                Weight: 15,
-            },
-            Interval: time.Second * 5,
-            Timeout: time.Second,
-            RunFunc: func(ctx context.Context) (state.State, error) {
-                // make GRPC call, check system health
-                ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-                defer cancel()
-                _, err := c.SayHelloAgain(ctx, &pb.HelloRequest{Name: "hello grpc again"})
                 if err != nil {
                     return state.Unknown, err
                 }
@@ -72,29 +50,15 @@ func main() {
         },
     }...)
 
-    //reports, unsubscribe := monitor.Subscribe()
-    //defer unsubscribe()
-
     ctx := context.Background()
     if err := monitor.Start(ctx); err != nil {
         log.Fatal(err.Error())
     }
-/*
-    // subscribe to changes in health
-    for report := range reports {
-        // access check information if present
-        // - Check will not be present for changes in overall system health
-        _ = report.Check
 
-        // access check evaluation result data
-        // - Result will be present for all reports
-        _ = report.Result
-    }
-  */  
-    // or add an HTTP endpoint to view the results of it
+    // add an HTTP endpoint to view the results of it
     http.HandleFunc("/healthz", health.HandlerFunc(monitor))
     if err := http.ListenAndServe(":9973", nil); err != nil {
         log.Fatal(err)
     }
-    //fmt.Println("listen and serve in http://sil.red:9973/healthz")
+
 }

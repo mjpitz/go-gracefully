@@ -13,15 +13,15 @@ func HandlerFunc(monitor *Monitor) http.HandlerFunc {
 		report := monitor.Report()
 		body, err := json.Marshal(report)
 		if err != nil {
-			writer.WriteHeader(500)
+			writer.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
 		writer.Header().Set("Content-Type", "application/json")
 		if report.State == state.Outage {
-			writer.WriteHeader(500)
+			writer.WriteHeader(http.StatusInternalServerError)
 		} else {
-			writer.WriteHeader(200)
+			writer.WriteHeader(http.StatusOK)
 		}
 
 		_, _ = writer.Write(body)

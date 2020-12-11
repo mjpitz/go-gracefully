@@ -55,7 +55,9 @@ func TestPeriodic_Once_Timeout(t *testing.T) {
 	result := timeout.Once(context.TODO())
 	require.Equal(t, state.Unknown, result.State)
 	require.NotNil(t, result.Error)
-	require.Equal(t, check.ErrTimeout, result.Error)
+
+	wrapped := result.Error.(*check.Error).Unwrap()
+	require.Equal(t, check.ErrTimeout, wrapped)
 }
 
 func TestPeriodic_Watch(t *testing.T) {

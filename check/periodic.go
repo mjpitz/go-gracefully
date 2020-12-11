@@ -40,7 +40,7 @@ func (p *Periodic) Once(parent context.Context) Result {
 		computedState, err := p.RunFunc(ctx)
 		result <- Result{
 			State:     computedState,
-			Error:     err,
+			Error:     WrapError(err),
 			Timestamp: p.Clock.Now(),
 		}
 	}()
@@ -51,7 +51,7 @@ func (p *Periodic) Once(parent context.Context) Result {
 	case <-p.Clock.After(p.Timeout):
 		return Result{
 			State:     state.Unknown,
-			Error:     ErrTimeout,
+			Error:     WrapError(ErrTimeout),
 			Timestamp: p.Clock.Now(),
 		}
 	}

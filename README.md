@@ -74,7 +74,7 @@ The list below was is just a few I drew inspiration from.
 ## Installation
 
 ```bash
-go get -u github.com/mjpitz/go-gravefully
+go get -u github.com/mjpitz/go-gracefully
 ```
 
 ## Usage
